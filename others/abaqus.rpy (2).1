@@ -1,0 +1,554 @@
+# -*- coding: mbcs -*-
+#
+# Abaqus/CAE Release 6.14-1 replay file
+# Internal Version: 2014_06_05-01.07.49 134264
+# Run by syed on Fri Sep 18 15:34:04 2015
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(0.0, 0.0), width=278.077056884766, 
+    height=141.972229003906)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].maximize()
+from caeModules import *
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+Mdb()
+#: A new model database has been created.
+#: The model "Model-1" has been created.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=20.0)
+g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
+s.setPrimaryObject(option=STANDALONE)
+s.Line(point1=(0.0, 0.0), point2=(1.0, 0.0))
+s.HorizontalConstraint(entity=g[2], addUndoState=False)
+s.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+s1 = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', 
+    sheetSize=20.0)
+g, v, d, c = s1.geometry, s1.vertices, s1.dimensions, s1.constraints
+s1.setPrimaryObject(option=STANDALONE)
+s1.Line(point1=(0.0, 0.0), point2=(1.0, 0.0))
+s1.HorizontalConstraint(entity=g[2], addUndoState=False)
+p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=TWO_D_PLANAR, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Part-1']
+p.BaseWire(sketch=s1)
+s1.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((1.0, 0.0), ))
+mdb.models['Model-1'].GeneralizedProfile(name='Profile-1', area=0.1, i11=0.001, 
+    i12=0.0, i22=0.001, j=0.0, gammaO=0.0, gammaW=0.0)
+mdb.models['Model-1'].BeamSection(name='Section-1', 
+    integration=BEFORE_ANALYSIS, poissonRatio=0.0, beamShape=CONSTANT, 
+    profile='Profile-1', thermalExpansion=OFF, temperatureDependency=OFF, 
+    dependencies=0, table=((1.0, 1.0), ), alphaDamping=0.0, betaDamping=0.0, 
+    compositeDamping=0.0, centroid=(0.0, 0.0), shearCenter=(0.0, 0.0), 
+    consistentMassMatrix=False)
+p = mdb.models['Model-1'].parts['Part-1']
+e = p.edges
+edges = e.getSequenceFromMask(mask=('[#1 ]', ), )
+region = p.Set(edges=edges, name='Set-1')
+p = mdb.models['Model-1'].parts['Part-1']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+p = mdb.models['Model-1'].parts['Part-1']
+e = p.edges
+edges = e.getSequenceFromMask(mask=('[#1 ]', ), )
+region=p.Set(edges=edges, name='Set-2')
+p = mdb.models['Model-1'].parts['Part-1']
+p.assignBeamSectionOrientation(region=region, method=N1_COSINES, n1=(0.0, 0.0, 
+    -1.0))
+#: Beam orientations have been assigned to the selected regions.
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON, optimizationTasks=OFF, 
+    geometricRestrictions=OFF, stopConditions=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+a.DatumCsysByDefault(CARTESIAN)
+p = mdb.models['Model-1'].parts['Part-1']
+a.Instance(name='Part-1-1', part=p, dependent=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(nlgeom=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+v1 = a.instances['Part-1-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#1 ]', ), )
+region = a.Set(vertices=verts1, name='Set-1')
+mdb.models['Model-1'].DisplacementBC(name='BC-1', createStepName='Step-1', 
+    region=region, u1=0.0, u2=0.0, ur3=0.0, amplitude=UNSET, fixed=OFF, 
+    distributionType=UNIFORM, fieldName='', localCsys=None)
+a = mdb.models['Model-1'].rootAssembly
+v1 = a.instances['Part-1-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#2 ]', ), )
+region = a.Set(vertices=verts1, name='Set-2')
+mdb.models['Model-1'].Moment(name='Load-1', createStepName='Step-1', 
+    region=region, cm3=0.006283, distributionType=UNIFORM, field='', 
+    localCsys=None)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF, mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['Part-1']
+p.seedPart(size=0.1, deviationFactor=0.1, minSizeFactor=0.1)
+elemType1 = mesh.ElemType(elemCode=B21, elemLibrary=STANDARD)
+p = mdb.models['Model-1'].parts['Part-1']
+e = p.edges
+edges = e.getSequenceFromMask(mask=('[#1 ]', ), )
+pickedRegions =(edges, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, ))
+p = mdb.models['Model-1'].parts['Part-1']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.Job(name='Job-1', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=1, 
+    numGPUs=0)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+mdb.saveAs(pathName='/home/syed/Copy/shell_matlab/simo/circle')
+#: The model database has been saved to "/home/syed/Copy/shell_matlab/simo/circle.cae".
+#: Job Job-1: Abaqus/Standard completed successfully.
+#: Job Job-1 completed successfully. 
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/Job-1.odb')
+#: Model: /home/syed/Copy/shell_matlab/simo/Job-1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          5
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+session.viewports[session.currentViewportName].odbDisplay.setFrame(
+    step='Step-1', frame=2)
+session.viewports[session.currentViewportName].odbDisplay.setFrame(
+    step='Step-1', frame=16)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/Job-1.odb')
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports[session.currentViewportName].odbDisplay.setFrame(
+    step='Step-1', frame=16)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(timeIncrementationMethod=FIXED, 
+    noStop=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+mdb.save()
+#: The model database has been saved to "/home/syed/Copy/shell_matlab/simo/circle.cae".
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(timePeriod=0.5, initialInc=0.5)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(timePeriod=0.2, initialInc=0.2)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(initialInc=0.1)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+mdb.models['Model-1'].loads['Load-1'].setValues(cm3=0.05, 
+    distributionType=UNIFORM, field='')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(timePeriod=1.0, 
+    initialInc=0.05)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/Job-1.odb')
+#: Model: /home/syed/Copy/shell_matlab/simo/Job-1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          5
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(initialInc=0.005)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/Job-1.odb')
+#: Model: /home/syed/Copy/shell_matlab/simo/Job-1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          5
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+#: Error in job Job-1: Too many increments needed to complete the step
+#: Error in job Job-1: THE ANALYSIS HAS BEEN TERMINATED DUE TO PREVIOUS ERRORS. ALL OUTPUT REQUESTS HAVE BEEN WRITTEN FOR THE LAST CONVERGED INCREMENT.
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].view.setValues(nearPlane=3.24074, 
+    farPlane=3.68746, width=1.8267, height=0.705013, viewOffsetX=-0.0721143, 
+    viewOffsetY=0.148855)
+session.viewports[session.currentViewportName].odbDisplay.setFrame(
+    step='Step-1', frame=26)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    optimizationTasks=ON, geometricRestrictions=ON, stopConditions=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    optimizationTasks=OFF, geometricRestrictions=OFF, stopConditions=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(
+    timeIncrementationMethod=AUTOMATIC, initialInc=1.0)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/Job-1.odb')
+#: Model: /home/syed/Copy/shell_matlab/simo/Job-1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          5
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+#: Error in job Job-1: Too many increments needed to complete the step
+#: Error in job Job-1: THE ANALYSIS HAS BEEN TERMINATED DUE TO PREVIOUS ERRORS. ALL OUTPUT REQUESTS HAVE BEEN WRITTEN FOR THE LAST CONVERGED INCREMENT.
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+mdb.models['Model-1'].loads['Load-1'].setValues(cm3=0.006283, 
+    distributionType=UNIFORM, field='')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(timeIncrementationMethod=FIXED, 
+    initialInc=0.5, noStop=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Analysis Input File Processor completed successfully.
+#: Error in job Job-1: Fixed time increment is too large
+#: Job Job-1: Abaqus/Standard aborted due to errors.
+#: Error in job Job-1: Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.
+#: Job Job-1 aborted due to errors.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(initialInc=0.05)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['Job-1'].submit(consistencyChecking=OFF)
+#: The job input file "Job-1.inp" has been submitted for analysis.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+#: Job Job-1: Analysis Input File Processor completed successfully.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF)
+#: Job Job-1: Abaqus/Standard completed successfully.
+#: Job Job-1 completed successfully. 
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/Job-1.odb')
+#: Model: /home/syed/Copy/shell_matlab/simo/Job-1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          5
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.save()
+#: The model database has been saved to "/home/syed/Copy/shell_matlab/simo/circle.cae".
+Mdb()
+#: A new model database has been created.
+#: The model "Model-1" has been created.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=20.0)
+g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
+s.setPrimaryObject(option=STANDALONE)
+s.Line(point1=(0.0, 0.0), point2=(0.0, 100.0))
+s.VerticalConstraint(entity=g[2], addUndoState=False)
+s.undo()
+s.Line(point1=(0.0, 0.0), point2=(0.0, 300.0))
+s.VerticalConstraint(entity=g[2], addUndoState=False)
+s.Line(point1=(0.0, 300.0), point2=(30.0, 300.0))
+s.HorizontalConstraint(entity=g[3], addUndoState=False)
+s.PerpendicularConstraint(entity1=g[2], entity2=g[3], addUndoState=False)
+s.Line(point1=(30.0, 300.0), point2=(300.0, 300.0))
+s.HorizontalConstraint(entity=g[4], addUndoState=False)
+s.ParallelConstraint(entity1=g[3], entity2=g[4], addUndoState=False)
+p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=TWO_D_PLANAR, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Part-1']
+p.BaseWire(sketch=s)
+s.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((1.0, 0.0), ))
+mdb.models['Model-1'].GeneralizedProfile(name='Profile-1', area=5.0, i11=1.0, 
+    i12=0.0, i22=1.0, j=0.0, gammaO=0.0, gammaW=0.0)
+mdb.models['Model-1'].BeamSection(name='Section-1', 
+    integration=BEFORE_ANALYSIS, poissonRatio=0.0, beamShape=CONSTANT, 
+    profile='Profile-1', thermalExpansion=OFF, temperatureDependency=OFF, 
+    dependencies=0, table=((200000.0, 200000.0), ), alphaDamping=0.0, 
+    betaDamping=0.0, compositeDamping=0.0, centroid=(0.0, 0.0), shearCenter=(
+    0.0, 0.0), consistentMassMatrix=False)
+mdb.models['Model-1'].materials['Material-1'].elastic.setValues(table=((
+    200000.0, 0.0), ))
+p = mdb.models['Model-1'].parts['Part-1']
+e = p.edges
+edges = e.getSequenceFromMask(mask=('[#7 ]', ), )
+region = p.Set(edges=edges, name='Set-1')
+p = mdb.models['Model-1'].parts['Part-1']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+p = mdb.models['Model-1'].parts['Part-1']
+e = p.edges
+edges = e.getSequenceFromMask(mask=('[#7 ]', ), )
+region=p.Set(edges=edges, name='Set-2')
+p = mdb.models['Model-1'].parts['Part-1']
+p.assignBeamSectionOrientation(region=region, method=N1_COSINES, n1=(0.0, 0.0, 
+    -1.0))
+#: Beam orientations have been assigned to the selected regions.
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+a1 = mdb.models['Model-1'].rootAssembly
+a1.DatumCsysByDefault(CARTESIAN)
+p = mdb.models['Model-1'].parts['Part-1']
+a1.Instance(name='Part-1-1', part=p, dependent=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial', nlgeom=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+v1 = a.instances['Part-1-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#9 ]', ), )
+region = a.Set(vertices=verts1, name='Set-1')
+mdb.models['Model-1'].DisplacementBC(name='BC-1', createStepName='Step-1', 
+    region=region, u1=0.0, u2=0.0, ur3=UNSET, amplitude=UNSET, fixed=OFF, 
+    distributionType=UNIFORM, fieldName='', localCsys=None)
+a = mdb.models['Model-1'].rootAssembly
+v1 = a.instances['Part-1-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#4 ]', ), )
+region = a.Set(vertices=verts1, name='Set-2')
+mdb.models['Model-1'].ConcentratedForce(name='Load-1', createStepName='Step-1', 
+    region=region, cf2=45.0, distributionType=UNIFORM, field='', 
+    localCsys=None)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=766.959, 
+    farPlane=930.097, width=849.773, height=327.97, viewOffsetX=11.0035, 
+    viewOffsetY=9.09525)
+mdb.models['Model-1'].loads['Load-1'].setValues(cf2=-45.0, 
+    distributionType=UNIFORM, field='')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF, mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['Part-1']
+p.seedPart(size=30.0, deviationFactor=0.1, minSizeFactor=0.1)
+p = mdb.models['Model-1'].parts['Part-1']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.Job(name='ell', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=1, 
+    numGPUs=0)
+mdb.saveAs(pathName='/home/syed/Copy/shell_matlab/simo/ell')
+#: The model database has been saved to "/home/syed/Copy/shell_matlab/simo/ell.cae".
+mdb.jobs['ell'].submit(consistencyChecking=OFF)
+#: The job input file "ell.inp" has been submitted for analysis.
+#: Job ell: Analysis Input File Processor completed successfully.
+#: Job ell: Abaqus/Standard completed successfully.
+#: Job ell completed successfully. 
+o3 = session.openOdb(name='/home/syed/Copy/shell_matlab/simo/ell.odb')
+#: Model: /home/syed/Copy/shell_matlab/simo/ell.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          5
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+odb = session.odbs['/home/syed/Copy/shell_matlab/simo/ell.odb']
+xyList = xyPlot.xyDataListFromField(odb=odb, outputPosition=NODAL, variable=((
+    'U', NODAL, ((COMPONENT, 'U2'), )), ), nodePick=(('PART-1-1', 1, ('[#4 ]', 
+    )), ), )
+xyp = session.XYPlot('XYPlot-1')
+chartName = xyp.charts.keys()[0]
+chart = xyp.charts[chartName]
+curveList = session.curveSet(xyData=xyList)
+chart.setValues(curvesToPlot=curveList)
+session.viewports['Viewport: 1'].setValues(displayedObject=xyp)
+session.xyPlots[session.viewports['Viewport: 1'].displayedObject.name].setValues(
+    transform=(0.905731, 0, 0, -0.00559824, 0, 0.905731, 0, 0.00733868, 0, 0, 
+    0.905731, 0, 0, 0, 0, 1))
+mdb.save()
+#: The model database has been saved to "/home/syed/Copy/shell_matlab/simo/ell.cae".
+Mdb()
+#: A new model database has been created.
+#: The model "Model-1" has been created.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)

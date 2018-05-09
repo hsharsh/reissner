@@ -1,0 +1,234 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=20.0)
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 0.0), point2=(
+    0.0, 100.0))
+mdb.models['Model-1'].sketches['__profile__'].VerticalConstraint(addUndoState=
+    False, entity=mdb.models['Model-1'].sketches['__profile__'].geometry[2])
+mdb.models['Model-1'].sketches['__profile__'].undo()
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 0.0), point2=(
+    0.0, 300.0))
+mdb.models['Model-1'].sketches['__profile__'].VerticalConstraint(addUndoState=
+    False, entity=mdb.models['Model-1'].sketches['__profile__'].geometry[2])
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 300.0), point2=
+    (30.0, 300.0))
+mdb.models['Model-1'].sketches['__profile__'].HorizontalConstraint(
+    addUndoState=False, entity=
+    mdb.models['Model-1'].sketches['__profile__'].geometry[3])
+mdb.models['Model-1'].sketches['__profile__'].PerpendicularConstraint(
+    addUndoState=False, entity1=
+    mdb.models['Model-1'].sketches['__profile__'].geometry[2], entity2=
+    mdb.models['Model-1'].sketches['__profile__'].geometry[3])
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(30.0, 300.0), 
+    point2=(300.0, 300.0))
+mdb.models['Model-1'].sketches['__profile__'].HorizontalConstraint(
+    addUndoState=False, entity=
+    mdb.models['Model-1'].sketches['__profile__'].geometry[4])
+mdb.models['Model-1'].sketches['__profile__'].ParallelConstraint(addUndoState=
+    False, entity1=mdb.models['Model-1'].sketches['__profile__'].geometry[3], 
+    entity2=mdb.models['Model-1'].sketches['__profile__'].geometry[4])
+mdb.models['Model-1'].Part(dimensionality=TWO_D_PLANAR, name='Part-1', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part-1'].BaseWire(sketch=
+    mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((1.0, 0.0), ))
+mdb.models['Model-1'].GeneralizedProfile(area=5.0, gammaO=0.0, gammaW=0.0, i11=
+    1.0, i12=0.0, i22=1.0, j=0.0, name='Profile-1')
+mdb.models['Model-1'].BeamSection(alphaDamping=0.0, beamShape=CONSTANT, 
+    betaDamping=0.0, centroid=(0.0, 0.0), compositeDamping=0.0, 
+    consistentMassMatrix=False, dependencies=0, integration=BEFORE_ANALYSIS, 
+    name='Section-1', poissonRatio=0.0, profile='Profile-1', shearCenter=(0.0, 
+    0.0), table=((200000.0, 200000.0), ), temperatureDependency=OFF, 
+    thermalExpansion=OFF)
+mdb.models['Model-1'].materials['Material-1'].elastic.setValues(table=((
+    200000.0, 0.0), ))
+mdb.models['Model-1'].parts['Part-1'].Set(edges=
+    mdb.models['Model-1'].parts['Part-1'].edges.getSequenceFromMask(('[#7 ]', 
+    ), ), name='Set-1')
+mdb.models['Model-1'].parts['Part-1'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=
+    mdb.models['Model-1'].parts['Part-1'].sets['Set-1'], sectionName=
+    'Section-1', thicknessAssignment=FROM_SECTION)
+mdb.models['Model-1'].parts['Part-1'].Set(edges=
+    mdb.models['Model-1'].parts['Part-1'].edges.getSequenceFromMask(('[#7 ]', 
+    ), ), name='Set-2')
+mdb.models['Model-1'].parts['Part-1'].assignBeamSectionOrientation(method=
+    N1_COSINES, n1=(0.0, 0.0, -1.0), region=
+    mdb.models['Model-1'].parts['Part-1'].sets['Set-2'])
+mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='Part-1-1', 
+    part=mdb.models['Model-1'].parts['Part-1'])
+mdb.models['Model-1'].StaticStep(name='Step-1', nlgeom=ON, previous='Initial')
+mdb.models['Model-1'].rootAssembly.Set(name='Set-1', vertices=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.getSequenceFromMask(
+    ('[#9 ]', ), ))
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-1', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-1', region=mdb.models['Model-1'].rootAssembly.sets['Set-1'], u1=0.0, 
+    u2=0.0, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(name='Set-2', vertices=
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].vertices.getSequenceFromMask(
+    ('[#4 ]', ), ))
+mdb.models['Model-1'].ConcentratedForce(cf2=45.0, createStepName='Step-1', 
+    distributionType=UNIFORM, field='', localCsys=None, name='Load-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['Set-2'])
+mdb.models['Model-1'].loads['Load-1'].setValues(cf2=-45.0, distributionType=
+    UNIFORM, field='')
+mdb.models['Model-1'].parts['Part-1'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=30.0)
+mdb.models['Model-1'].parts['Part-1'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='ell', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, queue=None, resultsFormat=ODB, scratch='', type=
+    ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+# Save by syed on 2015_09_18-15.54.04; build 6.14-1 2014_06_05-01.07.49 134264
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.jobs['ell'].submit(consistencyChecking=OFF)
+mdb.jobs['ell']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'syed-HP', 'handle': 0, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': '/home/syed/Copy/shell_matlab/simo/ell.odb', 'jobName': 'ell'})
+mdb.jobs['ell']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'syed-HP', 'handle': 0, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'ell'})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.0, 'attempts': 0, 
+    'timeIncrement': 1.0, 'increment': 0, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 0, 'phase': STANDARD_PHASE, 
+    'equilibrium': 0})
+mdb.jobs['ell']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'ell', 'memory': 24.0})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.0, 'attempts': ' 1U', 
+    'timeIncrement': 1.0, 'increment': 1, 'stepTime': 0.0, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 
+    'equilibrium': 5})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.25, 'attempts': 2, 
+    'timeIncrement': 0.25, 'increment': 1, 'stepTime': 0.25, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 6, 'phase': STANDARD_PHASE, 
+    'equilibrium': 6})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.5, 'attempts': 1, 
+    'timeIncrement': 0.25, 'increment': 2, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 6, 'phase': STANDARD_PHASE, 
+    'equilibrium': 6})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.5, 'attempts': ' 1U', 
+    'timeIncrement': 0.25, 'increment': 3, 'stepTime': 0.5, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 6, 'phase': STANDARD_PHASE, 
+    'equilibrium': 6})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.5625, 'attempts': 2, 
+    'timeIncrement': 0.0625, 'increment': 3, 'stepTime': 0.5625, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 
+    'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.625, 'attempts': 1, 
+    'timeIncrement': 0.0625, 'increment': 4, 'stepTime': 0.625, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 
+    'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 5, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.71875, 'attempts': 1, 
+    'timeIncrement': 0.09375, 'increment': 5, 'stepTime': 0.71875, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 
+    'equilibrium': 4})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.71875, 'attempts': ' 1U', 
+    'timeIncrement': 0.140625, 'increment': 6, 'stepTime': 0.71875, 'step': 1, 
+    'jobName': 'ell', 'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 
+    'equilibrium': 5})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 6, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.75390625, 'attempts': 2, 
+    'timeIncrement': 0.03515625, 'increment': 6, 'stepTime': 0.75390625, 
+    'step': 1, 'jobName': 'ell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 7, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.806640625, 'attempts': 1, 
+    'timeIncrement': 0.052734375, 'increment': 7, 'stepTime': 0.806640625, 
+    'step': 1, 'jobName': 'ell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 8, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.8857421875, 'attempts': 1, 
+    'timeIncrement': 0.0791015625, 'increment': 8, 'stepTime': 0.8857421875, 
+    'step': 1, 'jobName': 'ell', 'severe': 0, 'iterations': 6, 
+    'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.8857421875, 'attempts': ' 1U', 
+    'timeIncrement': 0.0791015625, 'increment': 9, 'stepTime': 0.8857421875, 
+    'step': 1, 'jobName': 'ell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 9, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.905517578125, 'attempts': 2, 
+    'timeIncrement': 0.019775390625, 'increment': 9, 
+    'stepTime': 0.905517578125, 'step': 1, 'jobName': 'ell', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 10, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.92529296875, 'attempts': 1, 
+    'timeIncrement': 0.019775390625, 'increment': 10, 
+    'stepTime': 0.92529296875, 'step': 1, 'jobName': 'ell', 'severe': 0, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 11, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.9549560546875, 'attempts': 1, 
+    'timeIncrement': 0.0296630859375, 'increment': 11, 
+    'stepTime': 0.9549560546875, 'step': 1, 'jobName': 'ell', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 12, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 0.99945068359375, 'attempts': 1, 
+    'timeIncrement': 0.04449462890625, 'increment': 12, 
+    'stepTime': 0.99945068359375, 'step': 1, 'jobName': 'ell', 'severe': 0, 
+    'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['ell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 13, 'jobName': 'ell'})
+mdb.jobs['ell']._Message(STATUS, {'totalTime': 1.0, 'attempts': 1, 
+    'timeIncrement': 0.00054931640625, 'increment': 13, 'stepTime': 1.0, 
+    'step': 1, 'jobName': 'ell', 'severe': 0, 'iterations': 2, 
+    'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['ell']._Message(END_STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'ell'})
+mdb.jobs['ell']._Message(COMPLETED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'ell'})
+mdb.jobs['ell']._Message(JOB_COMPLETED, {'time': 'Fri Sep 18 15:54:14 2015', 
+    'jobName': 'ell'})
+# Save by syed on 2015_09_18-16.51.23; build 6.14-1 2014_06_05-01.07.49 134264
